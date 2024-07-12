@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Update package lists and install nginx if not installed
+apt-get update
+apt-get install -y nginx
+
+# Ensure Nginx is configured to listen on port 80
+cat <<EOL > /etc/nginx/sites-available/default
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+
+    server_name _;
+
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
+}
+EOL
+
+# Restart Nginx to apply changes
+systemctl restart nginx
+
+# Ensure Nginx is set to start on boot
+systemctl enable nginx
+
+# Allow traffic on port 80 (ensure ufw is installed and allow port 80)
+ufw allow 80/tcp
+ufw reload
+
+# Print Nginx status to confirm it's running
+systemctl status nginx
