@@ -1,6 +1,5 @@
-#!/bin/bash
-apt-get update
-apt-get install -y nginx
-sed -i 's/listen 80 default_server;/listen 80 default_server;\n    listen [::]:80 default_server;/' /etc/nginx/sites-available/default
-service nginx restart
-ufw allow 80/tcp
+#!/usr/bin/env bash
+# Installing new server to serve content
+./0-nginx_likes_port_80
+echo "hi" > /var/run/nginx.pid
+echo "hi" > /run/nginx.pid
